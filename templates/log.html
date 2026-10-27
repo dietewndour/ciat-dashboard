@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block title %}Journal{% endblock %}
+{% block content %}
+<h1>Journal des questions à l'assistant</h1>
+<div class="card tablewrap"><table><tr><th>Date</th><th>Utilisateur</th><th>Mode</th><th>Question</th></tr>
+{% for r in rows %}<tr><td>{{ r.created_at }}</td><td>{{ r.username }}</td><td>{{ r.mode }}</td><td>{{ r.question }}</td></tr>
+{% else %}<tr><td colspan="4" class="muted">Aucune question enregistrée.</td></tr>{% endfor %}</table></div>
+{% endblock %}

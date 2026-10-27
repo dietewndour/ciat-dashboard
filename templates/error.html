@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Erreur{% endblock %}
+{% block content %}
+<div class="card">
+  <h1>{{ e.code }}</h1>
+  <p>{% if e.code == 403 %}Vous n'avez pas le droit d'accéder à cette page.
+     {% elif e.code == 404 %}Page introuvable.
+     {% elif e.code == 429 %}Trop de tentatives. Réessayez plus tard.
+     {% elif e.code == 400 %}{{ e.description }}
+     {% else %}Une erreur est survenue. L'équipe technique a été prévenue.{% endif %}</p>
+  <a class="btn secondary" href="{{ url_for('dashboard') }}">Retour au tableau de bord</a>
+</div>
+{% endblock %}

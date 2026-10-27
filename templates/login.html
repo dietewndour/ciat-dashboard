@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Connexion{% endblock %}
+{% block content %}
+<div class="card login">
+  <h1>Connexion</h1>
+  <p class="muted">Tableau de bord décisionnel du CIAT et de son incubateur.</p>
+  <form method="post">
+    <input type="hidden" name="csrf" value="{{ csrf() }}">
+    <p><label>Identifiant<br><input name="username" required autocomplete="username" autofocus></label></p>
+    <p><label>Mot de passe<br><input name="password" type="password" required autocomplete="current-password"></label></p>
+    <button type="submit">Se connecter</button>
+  </form>
+  <p class="notice">Démonstration : admin, coordo ou lecteur (mots de passe dans le README). Données fictives.</p>
+</div>
+{% endblock %}

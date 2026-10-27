@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Assistant{% endblock %}
+{% block content %}
+<h1>Interroger les données</h1>
+<div class="card">
+  <div id="chat" class="chat" aria-live="polite"><div class="msg a">Posez une question sur les idées, sélections, prototypes, retards, partenariats ou financements.</div></div>
+  <form id="ask" autocomplete="off">
+    <input type="hidden" id="csrf" value="{{ csrf() }}">
+    <label for="q" class="muted">Votre question</label>
+    <textarea id="q" rows="2" maxlength="500" required></textarea>
+    <p><button type="submit">Envoyer</button></p>
+  </form>
+  <div class="chips" aria-label="Exemples">
+    <button type="button">Combien d'idées par domaine ?</button>
+    <button type="button">Compare les cohortes pour les prototypes</button>
+    <button type="button">Combien de projets en retard par cohorte ?</button>
+    <button type="button">Financements par domaine</button>
+    <button type="button">Combien de projets portés par des femmes en 2025 ?</button>
+  </div>
+  <p class="notice">Les chiffres viennent directement de la base. {% if ai_on %}Une IA générative traduit votre question en requête structurée ; elle ne rédige aucun chiffre.{% else %}Mode sans IA générative (analyse par mots-clés). Définissez ANTHROPIC_API_KEY pour activer la compréhension libre.{% endif %}
+  Vos questions sont enregistrées dans le journal de l'administrateur.</p>
+</div>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='assistant.js') }}"></script>{% endblock %}

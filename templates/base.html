@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Tableau de bord{% endblock %} | CIAT ISEP Amadou Trawaré</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+{% if g.user %}
+<header class="top">
+  <span class="brand">CIAT · Tableau de bord</span>
+  <nav>
+    <a href="{{ url_for('dashboard') }}">Tableau de bord</a>
+    <a href="{{ url_for('projects') }}">Projets</a>
+    <a href="{{ url_for('assistant_page') }}">Assistant</a>
+    {% if g.user.role == 'admin' %}<a href="{{ url_for('admin_log') }}">Journal</a>{% endif %}
+  </nav>
+  <span class="who">{{ g.user.full_name }} ({{ g.user.role }})</span>
+  <form method="post" action="{{ url_for('logout') }}">
+    <input type="hidden" name="csrf" value="{{ csrf() }}">
+    <button class="link" type="submit">Déconnexion</button>
+  </form>
+</header>
+{% endif %}
+<main>
+{% for cat, msg in get_flashed_messages(with_categories=true) %}
+  <div class="flash {{ cat }}" role="status">{{ msg }}</div>
+{% endfor %}
+{% block content %}{% endblock %}
+</main>
+{% block scripts %}{% endblock %}
+</body>
+</html>

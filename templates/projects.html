@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Projets{% endblock %}
+{% block content %}
+<h1>Projets ({{ rows|length }})</h1>
+{% include "_filters.html" %}
+<div class="toolbar">{% if can_write() %}<a class="btn" href="{{ url_for('project_new') }}">Nouveau projet</a>{% endif %}</div>
+<div class="card tablewrap"><table>
+  <tr><th>Titre</th><th>Porteur</th><th>Domaine</th><th>Cohorte</th><th>Statut</th><th>Progression</th><th>Financement</th></tr>
+  {% for r in rows %}
+  <tr><td><a href="{{ url_for('project', pid=r.id) }}">{{ r.title }}</a> {% if r.delayed %}<span class="tag late">retard</span>{% endif %}</td>
+    <td>{{ r.owner_name }}</td><td>{{ r.domain }}</td><td>{{ r.cohort }}</td><td><span class="tag">{{ STATUS[r.status] }}</span></td>
+    <td>{{ r.progress_pct }} %</td><td>{{ fmt(r.funding, 'fcfa') }}</td></tr>
+  {% else %}<tr><td colspan="7" class="muted">Aucun projet ne correspond aux filtres.</td></tr>{% endfor %}
+</table></div>
+{% endblock %}

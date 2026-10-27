@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Nouveau projet' if new else 'Modifier le projet' }}{% endblock %}
+{% block content %}
+<h1>{{ 'Nouveau projet' if new else 'Modifier le projet' }}</h1>
+<form class="card" method="post">
+  <input type="hidden" name="csrf" value="{{ csrf() }}">
+  <div class="form-grid">
+    <label>Titre<input name="title" required minlength="3" maxlength="120" value="{{ p.title or '' }}"></label>
+    <label>Porteur<input name="owner_name" required minlength="3" maxlength="80" value="{{ p.owner_name or '' }}"></label>
+    <label>Genre<select name="owner_gender">
+      <option value="F" {{ 'selected' if p.owner_gender == 'F' }}>Femme</option><option value="M" {{ 'selected' if p.owner_gender == 'M' }}>Homme</option></select></label>
+    <label>Domaine<select name="domain_id" required>{% for d in domains %}<option value="{{ d.id }}" {{ 'selected' if p.domain_id == d.id }}>{{ d.name }}</option>{% endfor %}</select></label>
+    <label>Cohorte<select name="cohort_id" required>{% for c in cohorts %}<option value="{{ c.id }}" {{ 'selected' if p.cohort_id == c.id }}>{{ c.name }}</option>{% endfor %}</select></label>
+    <label>Statut<select name="status">{% for k, v in STATUS.items() %}<option value="{{ k }}" {{ 'selected' if p.status == k }}>{{ v }}</option>{% endfor %}</select></label>
+    <label>Date de dépôt<input type="date" name="submitted_on" required value="{{ p.submitted_on or '' }}"></label>
+    <label>Date de sélection<input type="date" name="selected_on" value="{{ p.selected_on or '' }}"></label>
+    <label>Date du prototype<input type="date" name="prototype_on" value="{{ p.prototype_on or '' }}"></label>
+    <label>Progression (%)<input type="number" name="progress_pct" min="0" max="100" required value="{{ p.progress_pct if p.progress_pct is not none else 0 }}"></label>
+  </div>
+  <p><label>Description<textarea name="description" rows="3" maxlength="1000">{{ p.description or '' }}</textarea></label></p>
+  <button type="submit">Enregistrer</button>
+  <a class="btn secondary" href="{{ url_for('projects') }}">Annuler</a>
+</form>
+{% endblock %}

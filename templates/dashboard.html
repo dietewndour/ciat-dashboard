@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Tableau de bord{% endblock %}
+{% block content %}
+<h1>Tableau de bord du CIAT</h1>
+{% include "_filters.html" %}
+<div class="toolbar">
+  <a class="btn secondary" href="{{ url_for('export_excel') }}?{{ qs }}">Exporter en Excel</a>
+  <a class="btn secondary" href="{{ url_for('export_pdf') }}?{{ qs }}">Exporter en PDF</a>
+  <span class="muted">Image : bouton sous chaque graphique. Cliquez sur une barre « Domaine » pour filtrer.</span>
+</div>
+
+<section class="grid kpis" aria-label="Indicateurs clés">
+{% for key in ['projects','selected','selection_rate','prototypes','delayed','avg_progress','partnerships','funding'] %}
+  <div class="card kpi"><div class="v">{{ fmt(kpis[key].value, kpis[key].unit) }}</div><div class="l">{{ kpis[key].label }}</div></div>
+{% endfor %}
+</section>
+
+<section class="grid charts">
+  <div class="card"><h2>Idées par domaine</h2><div class="chartbox"><canvas id="c-domain" role="img" aria-label="Idées par domaine"></canvas></div>
+    <button class="secondary dl" data-chart="c-domain" type="button">Télécharger l'image</button></div>
+  <div class="card"><h2>Comparaison des cohortes</h2><div class="chartbox"><canvas id="c-cohorts" role="img" aria-label="Comparaison des cohortes"></canvas></div>
+    <button class="secondary dl" data-chart="c-cohorts" type="button">Télécharger l'image</button></div>
+  <div class="card"><h2>Répartition par genre</h2><div class="chartbox"><canvas id="c-gender" role="img" aria-label="Répartition par genre"></canvas></div>
+    <button class="secondary dl" data-chart="c-gender" type="button">Télécharger l'image</button></div>
+  <div class="card"><h2>Projets par statut</h2><div class="chartbox"><canvas id="c-status" role="img" aria-label="Projets par statut"></canvas></div>
+    <button class="secondary dl" data-chart="c-status" type="button">Télécharger l'image</button></div>
+  <div class="card"><h2>Idées reçues par mois</h2><div class="chartbox"><canvas id="c-monthly" role="img" aria-label="Idées par mois"></canvas></div>
+    <button class="secondary dl" data-chart="c-monthly" type="button">Télécharger l'image</button></div>
+  <div class="card"><h2>Financements par cohorte (FCFA)</h2><div class="chartbox"><canvas id="c-funding" role="img" aria-label="Financements par cohorte"></canvas></div>
+    <button class="secondary dl" data-chart="c-funding" type="button">Télécharger l'image</button></div>
+</section>
+
+<section class="card mt" aria-label="Projets en retard">
+  <h2>Projets en retard</h2>
+  {% if late %}
+  <div class="tablewrap"><table>
+    <tr><th>Projet</th><th>Porteur</th><th>Cohorte</th><th>Jalons en retard</th><th>Depuis le</th></tr>
+    {% for r in late %}<tr><td><a href="{{ url_for('project', pid=r.id) }}">{{ r.title }}</a></td><td>{{ r.owner_name }}</td>
+      <td>{{ r.cohort }}</td><td>{{ r.late_count }}</td><td>{{ r.oldest_due }}</td></tr>{% endfor %}
+  </table></div>
+  {% else %}<p class="muted">Aucun projet en retard pour ce périmètre.</p>{% endif %}
+</section>
+<p class="notice">Données fictives de démonstration. Un retard est un jalon non terminé dont l'échéance est passée.</p>
+
+<script id="chart-data" type="application/json">{{ {'charts': charts, 'domainIds': domain_ids} | tojson }}</script>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='chart.umd.js') }}"></script>
+<script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+{% endblock %}

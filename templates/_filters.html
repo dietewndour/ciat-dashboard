@@ -1,0 +1,20 @@
+<form class="filters card" method="get" aria-label="Filtres">
+  <label>Cohorte
+    <select name="cohort_id"><option value="">Toutes</option>
+    {% for c in cohorts %}<option value="{{ c.id }}" {{ 'selected' if f.cohort_id == c.id }}>{{ c.name }}</option>{% endfor %}</select></label>
+  <label>Domaine
+    <select name="domain_id"><option value="">Tous</option>
+    {% for d in domains %}<option value="{{ d.id }}" {{ 'selected' if f.domain_id == d.id }}>{{ d.name }}</option>{% endfor %}</select></label>
+  <label>Statut
+    <select name="status"><option value="">Tous</option>
+    {% for k, v in STATUS.items() %}<option value="{{ k }}" {{ 'selected' if f.status == k }}>{{ v }}</option>{% endfor %}</select></label>
+  <label>Genre
+    <select name="gender"><option value="">Tous</option>
+      <option value="F" {{ 'selected' if f.gender == 'F' }}>Femmes</option>
+      <option value="M" {{ 'selected' if f.gender == 'M' }}>Hommes</option></select></label>
+  <label>Déposé depuis<input type="date" name="date_from" value="{{ f.date_from or '' }}"></label>
+  <label>jusqu'au<input type="date" name="date_to" value="{{ f.date_to or '' }}"></label>
+  <label>Porteur<input name="owner" value="{{ f.owner or '' }}" placeholder="Nom"></label>
+  <button type="submit">Filtrer</button>
+  <a class="btn secondary" href="{{ request.path }}">Réinitialiser</a>
+</form>

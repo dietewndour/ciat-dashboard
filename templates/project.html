@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}{{ p.title }}{% endblock %}
+{% block content %}
+<h1>{{ p.title }}</h1>
+<div class="toolbar">
+  <a class="btn secondary" href="{{ url_for('project_fiche', pid=p.id) }}">Fiche PDF</a>
+  {% if can_write() %}<a class="btn" href="{{ url_for('project_edit', pid=p.id) }}">Modifier</a>{% endif %}
+  {% if g.user.role == 'admin' %}
+  <form method="post" action="{{ url_for('project_delete', pid=p.id) }}">
+    <input type="hidden" name="csrf" value="{{ csrf() }}"><button class="danger" type="submit">Supprimer</button></form>{% endif %}
+</div>
+<div class="card">
+  <p>Porteur : <b>{{ p.owner_name }}</b> ({{ 'femme' if p.owner_gender == 'F' else 'homme' }})<br>
+  Domaine : {{ p.domain }}<br>Cohorte : {{ p.cohort }}<br>Statut : <span class="tag">{{ STATUS[p.status] }}</span><br>
+  Déposé le {{ p.submitted_on }}{% if p.selected_on %} · sélectionné le {{ p.selected_on }}{% endif %}{% if p.prototype_on %} · prototype le {{ p.prototype_on }}{% endif %}<br>
+  Progression : {{ p.progress_pct }} %</p>
+  {% if p.description %}<p>{{ p.description }}</p>{% endif %}
+</div>
+<section class="card"><h2>Jalons</h2>
+{% if ms %}<div class="tablewrap"><table><tr><th>Jalon</th><th>Échéance</th><th>État</th><th></th></tr>
+{% for m in ms %}<tr><td>{{ m.label }}</td><td>{{ m.due_on }}</td>
+  <td>{% if m.done_on %}Terminé le {{ m.done_on }}{% elif m.due_on < today %}<span class="tag late">En retard</span>{% else %}À venir{% endif %}</td>
+  <td>{% if can_write() %}<form method="post" action="{{ url_for('milestone_toggle', mid=m.id) }}">
+    <input type="hidden" name="csrf" value="{{ csrf() }}"><button class="secondary" type="submit">{{ 'Rouvrir' if m.done_on else 'Marquer terminé' }}</button></form>{% endif %}</td></tr>{% endfor %}
+</table></div>{% else %}<p class="muted">Aucun jalon enregistré.</p>{% endif %}</section>
+<section class="card"><h2>Financements</h2>
+{% for x in fu %}<p>{{ x.source }} : {{ fmt(x.amount_fcfa, 'fcfa') }} ({{ x.status }})</p>{% else %}<p class="muted">Aucun financement.</p>{% endfor %}</section>
+<section class="card"><h2>Partenariats</h2>
+{% for x in pa %}<p>{{ x.partner_name }} · {{ x.kind }} · {{ x.status }}</p>{% else %}<p class="muted">Aucun partenariat.</p>{% endfor %}</section>
+{% endblock %}
