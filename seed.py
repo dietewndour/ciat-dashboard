@@ -64,9 +64,9 @@ def build(path, seed=42, n_projects=96):
     cur.executemany("INSERT INTO cohorts(name,start_date,end_date) VALUES (?,?,?)", COHORTS)
 
     users = [
-        ("admin", "Administrateur CIAT", "admin", "Admin#2026"),
-        ("coordo", "Coordonnateur de l'incubateur", "coordinateur", "Coordo#2026"),
-        ("lecteur", "Membre du comité", "lecteur", "Lecteur#2026"),
+        ("admin", "Administrateur CIAT", "admin", os.environ.get("ADMIN_PASSWORD", "Admin#2026")),
+        ("coordo", "Coordonnateur de l'incubateur", "coordinateur", os.environ.get("COORDO_PASSWORD", "Coordo#2026")),
+        ("lecteur", "Membre du comité", "lecteur", os.environ.get("LECTEUR_PASSWORD", "Lecteur#2026")),
     ]
     for u, n, r, p in users:
         cur.execute("INSERT INTO users(username,full_name,password_hash,role) VALUES (?,?,?,?)",

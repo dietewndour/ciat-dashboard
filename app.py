@@ -34,6 +34,8 @@ def create_app(config=None):
     )
     if config:
         app.config.update(config)
+    if app.config["SESSION_COOKIE_SECURE"] and app.config["SECRET_KEY"] == "dev-only-change-me":
+        raise RuntimeError("SECRET_KEY doit être défini en production (COOKIE_SECURE=1).")
     if os.environ.get("USE_REAL_TODAY") == "1":
         an.USE_REAL_TODAY = True
     if not os.path.exists(app.config["DATABASE"]):
