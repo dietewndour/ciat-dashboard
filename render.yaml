@@ -1,0 +1,21 @@
+# Déploiement Render (plan gratuit). Render > New > Blueprint > choisir le dépôt GitHub.
+services:
+  - type: web
+    name: ciat-dashboard
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn wsgi:app --workers 1 --threads 4 --timeout 60
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      - key: SECRET_KEY
+        generateValue: true
+      - key: COOKIE_SECURE
+        value: "1"
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: COORDO_PASSWORD
+        sync: false
+      - key: LECTEUR_PASSWORD
+        sync: false
